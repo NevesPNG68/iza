@@ -277,238 +277,232 @@ td strong{color:var(--text-1)}
 }
 
 /* =========================================================
-   MOBILE REWORK — preserva o desktop e reorganiza <= 880px
+   MOBILE APP LAYOUT — inspirado no painel Casa Atami
    ========================================================= */
-@media (max-width:880px){
-  body{overflow-x:hidden;}
+.mobile-appbar,.mobile-drawer-backdrop,.mobile-premise-actions{display:none;}
 
-  /* O antigo sidebar vira um cabeçalho compacto */
-  #sidebar{
-    position:static;
-    width:100%;
-    height:auto;
-    border-right:0;
-    border-bottom:1px solid var(--border-soft);
-    background:var(--bg-1);
-  }
-  #sidebar .brand{
-    padding:14px 16px 10px;
-    display:grid;
-    grid-template-columns:1fr;
-    gap:2px;
-  }
-  #sidebar .brand .eyebrow{
-    font-size:9px;
-    letter-spacing:.16em;
-  }
-  #sidebar .brand h1{
-    margin:3px 0 0;
-    font-size:21px;
-  }
-  #sidebar .brand p{
-    display:none;
-  }
-  #sidebar nav{
-    padding:8px 10px 10px;
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:7px;
-  }
-  .nav-btn{
-    justify-content:center;
-    padding:10px 8px;
-    gap:6px;
-    min-height:46px;
-    border-radius:11px;
-    font-size:12px;
-    white-space:nowrap;
-  }
-  .nav-btn .icon{
-    width:27px;
-    height:27px;
-    border-radius:8px;
-    font-size:12px;
-  }
-  #sidebar .foot{display:none;}
+@media(max-width:880px){
+  html,body{max-width:100%;overflow-x:hidden;}
+  body.drawer-open{overflow:hidden;}
 
-  #main{margin-left:0;width:100%;}
+  /* Desktop navigation/header disappear on mobile */
+  #sidebar,#topbar{display:none !important;}
+  #main{margin-left:0 !important;width:100%;}
 
-  /* Remove a repetição enorme de "Premissas" no mobile */
-  #topbar{
+  .mobile-appbar{
+    display:flex;
     position:sticky;
     top:0;
-    z-index:30;
-    padding:9px 10px;
-    gap:8px;
-    background:color-mix(in srgb,var(--bg) 94%, transparent);
+    z-index:90;
+    height:66px;
+    padding:10px 14px;
+    align-items:center;
+    gap:12px;
+    background:var(--bg);
+    border-bottom:1px solid var(--border-soft);
   }
-  #topbar > div:first-child{
-    display:none;
+  .mobile-icon-btn{
+    width:44px;height:44px;flex:0 0 44px;
+    border:1px solid var(--border);border-radius:12px;
+    background:var(--bg-2);color:var(--text-1);
+    font-size:20px;display:grid;place-items:center;cursor:pointer;
   }
-  .top-actions{
+  .mobile-appbar-title{
+    flex:1;
+    font:700 22px var(--font-display);
+    letter-spacing:-.02em;
+  }
+
+  /* Off-canvas menu */
+  .mobile-drawer-backdrop{
+    position:fixed;inset:0;z-index:120;
+    background:rgba(0,0,0,.58);
+    opacity:0;pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .mobile-drawer-backdrop.open{
+    display:block;
+    opacity:1;
+    pointer-events:auto;
+  }
+  .mobile-drawer{
+    width:min(82vw,340px);
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg-1);
+    border-right:1px solid var(--border);
+    transform:translateX(-100%);
+    transition:transform .22s ease;
+    box-shadow:24px 0 60px rgba(0,0,0,.32);
+  }
+  .mobile-drawer-backdrop.open .mobile-drawer{transform:translateX(0);}
+  .mobile-drawer-brand{
+    display:flex;align-items:center;gap:12px;
+    padding:28px 18px 20px;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .mobile-logo{
+    width:48px;height:48px;border-radius:13px;
+    display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--teal),var(--gold));
+    color:#fff;font:800 22px var(--font-display);
+  }
+  .mobile-drawer-brand strong{
+    display:block;font:700 21px var(--font-display);
+  }
+  .mobile-drawer-brand span{
+    display:block;color:var(--text-3);font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.08em;margin-top:2px;
+  }
+  .mobile-drawer-nav{
+    padding:16px 14px;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .mobile-nav-btn{
     width:100%;
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:7px;
+    display:flex;align-items:center;gap:13px;
+    padding:13px 14px;
+    border:1px solid transparent;border-radius:11px;
+    background:transparent;color:var(--text-2);
+    font:600 15px var(--font-body);text-align:left;cursor:pointer;
   }
-  .top-actions .btn,
-  .top-actions .theme-toggle{
-    width:100%;
-    justify-content:center;
-    min-height:42px;
-    padding:9px 8px;
-    border-radius:10px;
-    font-size:12px;
+  .mobile-nav-btn span{
+    width:26px;color:var(--text-3);font-size:18px;text-align:center;
   }
-  .top-actions .save-status{
-    display:none !important;
+  .mobile-nav-btn.active{
+    background:color-mix(in srgb,var(--teal) 14%, var(--bg-2));
+    color:var(--teal);
+    border-color:color-mix(in srgb,var(--teal) 22%, var(--border));
+  }
+  .mobile-nav-btn.active span{color:var(--teal);}
+  .mobile-drawer-bottom{
+    margin-top:auto;
+    padding:18px;
+    border-top:1px solid var(--border-soft);
+  }
+  .mobile-drawer-bottom span{
+    display:block;color:var(--text-3);font-size:10px;text-transform:uppercase;
+    letter-spacing:.08em;font-weight:800;
+  }
+  .mobile-drawer-bottom strong{
+    display:block;margin-top:6px;font:700 22px var(--font-display);
+    color:var(--teal);
+  }
+  .mobile-drawer-bottom small{
+    display:block;margin-top:3px;color:var(--text-2);font-size:11px;
   }
 
   .page{
-    padding:12px 10px 24px;
+    padding:14px 12px 28px !important;
+  }
+
+  /* Premissas: actions like app controls, not desktop toolbar */
+  .mobile-premise-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .mobile-action{
+    min-height:42px;
+    border:1px solid var(--border);border-radius:11px;
+    background:var(--bg-2);color:var(--text-1);
+    font:700 12px var(--font-body);
+  }
+  .mobile-action.primary{
+    background:color-mix(in srgb,var(--teal) 16%, var(--bg-2));
+    border-color:var(--teal-dim);color:var(--teal);
+  }
+  .mobile-action.subtle{color:var(--text-2);}
+  .mobile-save-note{
+    grid-column:1/-1;
+    color:var(--teal);
+    font-size:10px;
+    padding:1px 2px;
+  }
+
+  /* Hide desktop hero on mobile; app begins directly with useful content */
+  #page-premissas > .hero{display:none;}
+
+  .grid.grid-2{
+    grid-template-columns:1fr !important;
+    gap:12px;
   }
 
   .card{
-    border-radius:14px;
-    padding:14px;
-    box-shadow:0 8px 20px rgba(0,0,0,.14);
+    border-radius:16px !important;
+    padding:15px !important;
+    box-shadow:none !important;
   }
   .section-head{
-    margin-bottom:11px;
-    gap:8px;
+    margin-bottom:13px !important;
   }
   .section-head h3{
-    font-size:17px;
+    font-size:18px !important;
   }
   .section-head p{
-    font-size:11.5px;
-    line-height:1.35;
+    font-size:11.5px !important;
+    line-height:1.4;
   }
   .badge{
-    padding:6px 8px;
-    font-size:10px;
+    font-size:10px !important;
+    padding:6px 8px !important;
   }
 
-  .hero{
-    padding:15px;
-  }
-  .hero h3{
-    font-size:21px;
-    line-height:1.15;
-    margin-bottom:7px;
-  }
-  .hero p{
-    font-size:12.5px;
-    line-height:1.45;
-  }
-  .hero-list{
-    margin-top:11px;
-    gap:6px;
-  }
-  .hero-list span{
-    padding:6px 8px;
-    font-size:10px;
-  }
-
-  /* Campos mais densos no celular */
-  .form-grid,
+  /* Main premises: full-width rows like native mobile forms */
   .premises-general .form-grid,
-  .expense-grid,
   .expenses-card .expense-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:8px;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
   }
   .premises-general .field,
   .expenses-card .field{
-    padding:8px;
-    border-radius:10px;
-  }
-  .field{
-    gap:4px;
+    border:0 !important;
+    padding:0 !important;
+    background:transparent !important;
   }
   .field label,
   .premises-general .field label,
   .expenses-card .field label{
-    min-height:0;
-    font-size:10.5px;
-    line-height:1.2;
+    min-height:auto !important;
+    font-size:10.5px !important;
+    margin-bottom:4px;
   }
-  .field input,
-  .field select,
+  .field input,.field select,
   .premises-general .field input,
   .expenses-card .field input{
-    min-height:42px;
-    padding:9px 10px;
-    border-radius:9px;
-    font-size:16px; /* evita zoom automático no iPhone */
-  }
-
-  /* Cards de cenários e KPIs */
-  .kpi-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-  }
-  .kpi{
-    padding:12px;
-    border-radius:12px;
-  }
-  .kpi .eyebrow{
-    font-size:9px;
-    letter-spacing:.07em;
-  }
-  .kpi .value{
-    font-size:19px;
-    margin:6px 0 4px;
-  }
-  .kpi .hint{
-    font-size:10px;
-  }
-  .scenario-grid{
-    grid-template-columns:1fr;
-    gap:10px;
-  }
-  .scenario-card{
-    padding:13px;
-    border-radius:14px;
-  }
-  .scenario-metrics{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-  }
-  .metric-box{
-    padding:10px;
-    border-radius:11px;
-  }
-  .metric-box .val{
-    font-size:16px;
-  }
-
-  /* Gráficos */
-  .chart-box,
-  .chart-box.xl{
-    height:285px;
-  }
-
-  /* Tabelas continuam roláveis horizontalmente */
-  .table-wrap{
-    -webkit-overflow-scrolling:touch;
-  }
-  table{
-    min-width:760px;
-  }
-
-  /* Investimento inline: confortável no celular */
-  .investment-inline-actions{
     width:100%;
-    justify-content:space-between;
+    min-height:48px;
+    padding:12px 13px !important;
+    border-radius:11px !important;
+    background:var(--bg-3) !important;
+    font-size:16px !important; /* avoids Safari zoom */
   }
-  .investment-inline-head{
-    display:none;
+
+  /* Ramp-up keeps scenario pair fields together */
+  #page-premissas .card.soft .form-grid{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
   }
+
+  /* Investment card optimized for touch */
+  .investment-inline-card .section-head{
+    display:block;
+  }
+  .investment-inline-actions{
+    margin-top:10px;
+    width:100%;
+    display:grid !important;
+    grid-template-columns:1fr auto;
+    gap:8px;
+  }
+  .investment-inline-head{display:none !important;}
   .investment-inline-row{
-    grid-template-columns:34px minmax(0,1fr) 34px;
-    gap:7px;
-    padding:8px;
+    grid-template-columns:36px minmax(0,1fr) 38px !important;
+    grid-template-rows:auto auto;
+    gap:7px !important;
+    padding:9px !important;
   }
   .investment-inline-row .investment-inline-name{
     grid-column:2/3;
@@ -516,8 +510,8 @@ td strong{color:var(--text-1)}
   .investment-inline-row .investment-inline-value{
     grid-column:2/3;
     grid-row:2;
-    text-align:left;
-    font-size:16px;
+    text-align:left !important;
+    font-size:16px !important;
   }
   .investment-inline-row .investment-inline-remove{
     grid-column:3/4;
@@ -525,75 +519,99 @@ td strong{color:var(--text-1)}
     align-self:center;
   }
 
-  .investment-inline-card .section-head{
-    display:block;
+  /* KPI / scenario cards mimic stacked mobile dashboard */
+  .kpi-grid{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
   }
-  .investment-inline-actions{
-    margin-top:10px;
+  .kpi{
+    padding:16px !important;
+    border-radius:16px !important;
   }
+  .kpi .value{font-size:26px !important;}
+  .scenario-grid{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+  .scenario-card{
+    padding:16px !important;
+    border-radius:16px !important;
+  }
+  .scenario-metrics{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+
+  /* Charts / tables */
+  .chart-box,.chart-box.xl{
+    height:300px !important;
+  }
+  .table-wrap{
+    -webkit-overflow-scrolling:touch;
+    border-radius:12px !important;
+  }
+  table{min-width:760px;}
 }
 
-/* iPhones menores: mantém densidade sem esmagar o conteúdo */
-@media (max-width:430px){
-  #sidebar nav{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-  .nav-btn{
-    font-size:11px;
-    padding:9px 4px;
-  }
-  .nav-btn .icon{
-    display:none;
-  }
-
-  .top-actions{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-
-  .form-grid,
-  .premises-general .form-grid,
-  .expense-grid,
-  .expenses-card .expense-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-
-  .page{
-    padding-left:8px;
-    padding-right:8px;
-  }
-
-  .card{
-    padding:12px;
-  }
-
-  .scenario-metrics{
+@media(max-width:420px){
+  .mobile-premise-actions{
     grid-template-columns:1fr 1fr;
   }
-
-  .chart-box,
-  .chart-box.xl{
-    height:260px;
+  .mobile-action.subtle{
+    grid-column:1/-1;
   }
-}
-
-/* Muito estreito: só então vira uma coluna */
-@media (max-width:350px){
-  .form-grid,
-  .premises-general .form-grid,
-  .expense-grid,
-  .expenses-card .expense-grid,
-  .kpi-grid,
+  #page-premissas .card.soft .form-grid{
+    grid-template-columns:1fr 1fr !important;
+  }
   .scenario-metrics{
     grid-template-columns:1fr !important;
   }
-  #sidebar nav{
-    grid-template-columns:1fr;
-  }
+}
+
+
+/* Valores financeiros: mesma apresentação no desktop e no mobile */
+.money-input{
+  font-family:var(--font-mono) !important;
+  font-weight:700 !important;
+  letter-spacing:.01em;
+}
+.money-input:not(:focus){
+  color:var(--text-1);
 }
 
 </style>
 </head>
 <body>
+
+<div class="mobile-appbar">
+  <button class="mobile-icon-btn" id="mobileMenuBtn" type="button" aria-label="Abrir menu">☰</button>
+  <div class="mobile-appbar-title" id="mobilePageTitle">Premissas</div>
+  <button class="mobile-icon-btn" id="mobileThemeBtn" type="button" aria-label="Alternar tema">☀</button>
+</div>
+
+<div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop" aria-hidden="true">
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-brand">
+      <div class="mobile-logo">A</div>
+      <div>
+        <strong>Arquitetura</strong>
+        <span>Estudo de Viabilidade</span>
+      </div>
+    </div>
+
+    <nav class="mobile-drawer-nav">
+      <button class="mobile-nav-btn active" data-page="premissas" type="button"><span>⚙</span>Premissas</button>
+      <button class="mobile-nav-btn" data-page="dashboard" type="button"><span>▣</span>Dashboard</button>
+      <button class="mobile-nav-btn" data-page="curvas" type="button"><span>∿</span>Curvas & Ramp-up</button>
+    </nav>
+
+    <div class="mobile-drawer-bottom">
+      <span>Capital total do estudo</span>
+      <strong id="mobileCapitalTotal">R$ 0,00</strong>
+      <small id="mobileDrawerScenario">Base atual das premissas</small>
+    </div>
+  </aside>
+</div>
 <div class="app">
   <aside id="sidebar">
     <div class="brand">
@@ -624,6 +642,14 @@ td strong{color:var(--text-1)}
     </header>
 
     <section class="page active" id="page-premissas">
+
+      <div class="mobile-premise-actions">
+        <button class="mobile-action primary" id="mobileRecalc" type="button">Recalcular</button>
+        <button class="mobile-action" id="mobileSavePremises" type="button">Salvar</button>
+        <button class="mobile-action subtle" id="mobileRestore" type="button">Restaurar</button>
+        <span class="mobile-save-note" id="mobileSaveNote">Premissas salvas</span>
+      </div>
+
       <div class="card hero">
         <h3>Painel de premissas do estudo</h3>
         <p>
@@ -648,15 +674,19 @@ td strong{color:var(--text-1)}
             <span class="badge">Atualiza cenários, PE e payback</span>
           </div>
           <div class="form-grid">
-            <div class="field"><label>Implantação (R$)</label><input id="implantacao" type="text" inputmode="decimal" autocomplete="off" readonly title="Calculado pela composição do investimento"></div>
+            <div class="field"><label>Implantação (R$)</label><input id="implantacao" class="money-input" type="text" inputmode="decimal" autocomplete="off" readonly title="Calculado pela composição do investimento"></div>
             <div class="field"><label>Meses de capital de giro</label><input id="mesesCapitalGiro" type="text" inputmode="decimal" autocomplete="off"></div>
-            <div class="field"><label>Faturamento-base (R$)</label><input id="faturamentoBase" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Faturamento-base (R$)</label><input id="faturamentoBase" class="money-input" type="text" inputmode="decimal" autocomplete="off"></div>
             <div class="field"><label>Impostos (%)</label><input id="aliquotaImpostos" type="text" inputmode="decimal" autocomplete="off"></div>
-            <div class="field"><label>Custo mensal fixo (R$)</label><input id="custoVariavelFixo" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Custos variáveis / projetos (R$)</label><input id="custoVariavelFixo" class="money-input" type="text" inputmode="decimal" autocomplete="off"></div>
             <div class="field"><label>Inflação anual despesas (%)</label><input id="inflacaoDespesasFixas" type="text" inputmode="decimal" autocomplete="off"></div>
             <div class="field"><label>Fator cenário pessimista (x)</label><input id="fatorPessimista" type="text" inputmode="decimal" autocomplete="off"></div>
             <div class="field"><label>Fator cenário conservador (x)</label><input id="fatorModerado" type="text" inputmode="decimal" autocomplete="off"></div>
             <div class="field"><label>Fator cenário otimista (x)</label><input id="fatorOtimista" type="text" inputmode="decimal" autocomplete="off"></div>
+          </div>
+          <div class="explain" style="margin-top:10px;">
+            <strong>Importante:</strong> “Custos variáveis / projetos” é o valor mensal de R$ 500,00 usado no DRE.
+            As <strong>despesas fixas</strong> são calculadas separadamente no bloco “Despesas fixas mensais”.
           </div>
         </div>
 
@@ -676,7 +706,7 @@ td strong{color:var(--text-1)}
           <div class="explain">Os campos percentuais são exibidos já arredondados, por exemplo <strong>66,7%</strong>, para melhorar a leitura.</div>
           <div class="callout" style="margin-top:14px;">
             <span class="dot"></span>
-            <p>O custo mensal de <strong>R$ 2.000</strong> permanece fixo em todos os cenários, conforme a última definição do modelo.</p>
+            <p>Os custos variáveis / projetos de <strong>R$ 500</strong> permanecem constantes em todos os cenários, conforme a última definição do modelo.</p>
           </div>
         </div>
       </div>
@@ -797,7 +827,7 @@ td strong{color:var(--text-1)}
 </div>
 
 <script>
-const defaultState = {"implantacao": 58900.0, "investmentItems": [{"nome":"Valor consolidado do investimento","valor":58900.0,"incluir":true}], "mesesCapitalGiro": 3, "faturamentoBase": 7000.0, "aliquotaImpostos": 0.06, "custoVariavelFixo": 2000.0, "fatorPessimista": 1.0, "fatorModerado": 1.5, "fatorOtimista": 2.0, "inflacaoDespesasFixas": 0.0, "despesasFixas": [{"nome": "Aluguel", "valor": 2300.0}, {"nome": "Energia elétrica", "valor": 500.0}, {"nome": "Água", "valor": 100.0}, {"nome": "Internet", "valor": 150.0}, {"nome": "Software arquitetura/renderização", "valor": 500.0}, {"nome": "Contabilidade", "valor": 400.0}, {"nome": "Material de expediente", "valor": 200.0}, {"nome": "Manutenção / limpeza", "valor": 250.0}, {"nome": "Lembranças para clientes", "valor": 200.0}, {"nome": "Encadernações / plotagens", "valor": 300.0}, {"nome": "Café / água para clientes", "valor": 150.0}, {"nome": "Marketing / publicidade", "valor": 500.0}, {"nome": "Pró-labore", "valor": 0.0}, {"nome": "Salários + encargos", "valor": 0.0}, {"nome": "Depreciação mensal", "valor": 0.0}], "rampup": {"pessimista": {"pctInicial": 0.8, "mesAlvo": 6}, "moderado": {"pctInicial": 0.6666666666666666, "mesAlvo": 18}, "otimista": {"pctInicial": 0.75, "mesAlvo": 36}}};
+const defaultState = {"implantacao": 58900.0, "investmentItems": [{"nome":"Valor consolidado do investimento","valor":58900.0,"incluir":true}], "mesesCapitalGiro": 3, "faturamentoBase": 7000.0, "aliquotaImpostos": 0.06, "custoVariavelFixo": 500.0, "fatorPessimista": 1.0, "fatorModerado": 1.5, "fatorOtimista": 2.0, "inflacaoDespesasFixas": 0.0, "despesasFixas": [{"nome": "Aluguel", "valor": 2300.0}, {"nome": "Energia elétrica", "valor": 500.0}, {"nome": "Água", "valor": 100.0}, {"nome": "Internet", "valor": 150.0}, {"nome": "Software arquitetura/renderização", "valor": 500.0}, {"nome": "Contabilidade", "valor": 400.0}, {"nome": "Material de expediente", "valor": 200.0}, {"nome": "Manutenção / limpeza", "valor": 250.0}, {"nome": "Lembranças para clientes", "valor": 200.0}, {"nome": "Encadernações / plotagens", "valor": 300.0}, {"nome": "Café / água para clientes", "valor": 150.0}, {"nome": "Marketing / publicidade", "valor": 500.0}, {"nome": "Pró-labore", "valor": 0.0}, {"nome": "Salários + encargos", "valor": 0.0}, {"nome": "Depreciação mensal", "valor": 0.0}], "rampup": {"pessimista": {"pctInicial": 0.8, "mesAlvo": 6}, "moderado": {"pctInicial": 0.6666666666666666, "mesAlvo": 18}, "otimista": {"pctInicial": 0.75, "mesAlvo": 36}}};
 const charts = {};
 let state = JSON.parse(JSON.stringify(defaultState));
 
@@ -841,6 +871,31 @@ function loadPremises(){
   try{
     const saved = localStorage.getItem(STORAGE_KEY);
     if(saved) state = normalizeSavedState(JSON.parse(saved));
+
+    // Correção pontual solicitada em 18/09/2026.
+    // Altera SOMENTE estes três valores e preserva todas as demais premissas salvas.
+    const correctionKey = 'arquitetura-correcao-valores-20260918-v1';
+    if(!localStorage.getItem(correctionKey)){
+      state.faturamentoBase = 7000;
+      state.custoVariavelFixo = 500;
+
+      const aluguel = (state.despesasFixas || []).find(
+        item => String(item.nome || '').trim().toLowerCase() === 'aluguel'
+      );
+      if(aluguel) aluguel.valor = 2300;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(correctionKey, '1');
+    }
+
+    // Nova correção pontual: custos variáveis / projetos passam a partir de R$ 500,00.
+    // Nenhuma outra premissa salva é alterada.
+    const variableCostKey = 'arquitetura-custo-variavel-500-20260918-v1';
+    if(!localStorage.getItem(variableCostKey)){
+      state.custoVariavelFixo = 500;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(variableCostKey, '1');
+    }
   }catch(e){
     console.warn('Não foi possível carregar as premissas salvas.', e);
   }
@@ -852,6 +907,14 @@ function setSaveStatus(msg='Premissas salvas'){
   el.textContent = msg;
   clearTimeout(setSaveStatus._t);
   setSaveStatus._t = setTimeout(()=>{ if(el) el.textContent='Premissas salvas'; },1800);
+}
+
+function setMobileSaveNote(msg='Premissas salvas'){
+  const el = document.getElementById('mobileSaveNote');
+  if(!el) return;
+  el.textContent = msg;
+  clearTimeout(setMobileSaveNote._t);
+  setMobileSaveNote._t = setTimeout(()=>{ if(el) el.textContent='Premissas salvas'; },1800);
 }
 
 function savePremises(showMessage=true){
@@ -887,6 +950,36 @@ function parseInput(value){
 function formatInput(value, maxDigits=2){
   const n = Number(value || 0);
   return n.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:maxDigits});
+}
+
+function formatMoneyInput(value){
+  const n = Number(value || 0);
+  return n.toLocaleString('pt-BR',{
+    style:'currency',
+    currency:'BRL',
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function applyMoneyFormatting(root=document){
+  root.querySelectorAll('.money-input').forEach((input)=>{
+    // Sempre normaliza a exibição como moeda ao renderizar.
+    input.value = formatMoneyInput(parseInput(input.value));
+
+    if(input.dataset.moneyBound === '1') return;
+    input.dataset.moneyBound = '1';
+
+    input.addEventListener('focus', ()=>{
+      const v = parseInput(input.value);
+      input.value = formatInput(v,2);
+      setTimeout(()=>input.select(),0);
+    });
+
+    input.addEventListener('blur', ()=>{
+      input.value = formatMoneyInput(parseInput(input.value));
+    });
+  });
 }
 
 
@@ -1028,12 +1121,13 @@ function renderInvestmentInlineRows(){
       </div>
       <input class="investment-inline-name" type="text" autocomplete="off"
              data-investment-inline-index="${idx}" value="${String(item.nome ?? '').replace(/"/g,'&quot;')}">
-      <input class="investment-inline-value" type="text" inputmode="decimal" autocomplete="off"
-             data-investment-inline-index="${idx}" value="${formatInput(item.valor,2)}">
+      <input class="investment-inline-value money-input" type="text" inputmode="decimal" autocomplete="off"
+             data-investment-inline-index="${idx}" value="${formatMoneyInput(item.valor)}">
       <button class="investment-inline-remove" type="button" data-investment-inline-remove="${idx}" aria-label="Excluir item">×</button>
     </div>
   `).join('');
   refreshInvestmentInlineTotal();
+  applyMoneyFormatting(document.getElementById('investmentInlineRows'));
 }
 
 function captureInvestmentInlineRows(){
@@ -1052,16 +1146,16 @@ function refreshInvestmentInlineTotal(){
   const total = document.getElementById('investmentInlineTotal');
   if(total) total.textContent = fmtBRL.format(state.implantacao);
   const implantacao = document.getElementById('implantacao');
-  if(implantacao) implantacao.value = formatInput(state.implantacao,2);
+  if(implantacao) implantacao.value = formatMoneyInput(state.implantacao);
 }
 
 function fillInputs(){
   const m = {
-    implantacao: formatInput(state.implantacao,2),
+    implantacao: formatMoneyInput(state.implantacao),
     mesesCapitalGiro: formatInput(state.mesesCapitalGiro,0),
-    faturamentoBase: formatInput(state.faturamentoBase,2),
+    faturamentoBase: formatMoneyInput(state.faturamentoBase),
     aliquotaImpostos: formatInput(state.aliquotaImpostos*100,1),
-    custoVariavelFixo: formatInput(state.custoVariavelFixo,2),
+    custoVariavelFixo: formatMoneyInput(state.custoVariavelFixo),
     inflacaoDespesasFixas: formatInput(state.inflacaoDespesasFixas*100,1),
     fatorPessimista: formatInput(state.fatorPessimista,2),
     fatorModerado: formatInput(state.fatorModerado,2),
@@ -1079,10 +1173,11 @@ function fillInputs(){
   state.despesasFixas.forEach((item, idx)=>{
     const div = document.createElement('div');
     div.className = 'field';
-    div.innerHTML = `<label>${item.nome}</label><input type="text" inputmode="decimal" autocomplete="off" data-expense-index="${idx}" value="${formatInput(item.valor, 2)}">`;
+    div.innerHTML = `<label>${item.nome}</label><input class="money-input" type="text" inputmode="decimal" autocomplete="off" data-expense-index="${idx}" value="${formatMoneyInput(item.valor)}">`;
     wrap.appendChild(div);
   });
   renderInvestmentInlineRows();
+  applyMoneyFormatting(document.getElementById('page-premissas'));
 }
 
 function readInputs(){
@@ -1105,8 +1200,23 @@ function readInputs(){
   document.querySelectorAll('[data-expense-index]').forEach(input=>{ state.despesasFixas[Number(input.dataset.expenseIndex)].valor = parseInput(input.value); });
 }
 
+
+function openMobileDrawer(){
+  const backdrop = document.getElementById('mobileDrawerBackdrop');
+  backdrop.classList.add('open');
+  backdrop.setAttribute('aria-hidden','false');
+  document.body.classList.add('drawer-open');
+}
+function closeMobileDrawer(){
+  const backdrop = document.getElementById('mobileDrawerBackdrop');
+  if(!backdrop) return;
+  backdrop.classList.remove('open');
+  backdrop.setAttribute('aria-hidden','true');
+  document.body.classList.remove('drawer-open');
+}
+
 function setPage(page){
-  document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.page===page));
+  document.querySelectorAll('.nav-btn,.mobile-nav-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.page===page));
   document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active', el.id===`page-${page}`));
   const titleMap = {
     premissas:['Premissas','Ajuste as premissas do estudo e recalcule o dashboard.'],
@@ -1115,15 +1225,20 @@ function setPage(page){
   };
   document.getElementById('pageTitle').textContent = titleMap[page][0];
   document.getElementById('pageSub').textContent = titleMap[page][1];
+  const mobileTitle = document.getElementById('mobilePageTitle');
+  if(mobileTitle) mobileTitle.textContent = titleMap[page][0];
   document.querySelectorAll('.premise-only').forEach(el=>{
     el.style.display = page === 'premissas' ? '' : 'none';
   });
+  closeMobileDrawer();
 }
 
 function setTheme(theme){
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('arquitetura_theme', theme);
   document.getElementById('btnTheme').textContent = theme === 'dark' ? '☀ Tema claro' : '🌙 Tema escuro';
+  const mobileTheme = document.getElementById('mobileThemeBtn');
+  if(mobileTheme) mobileTheme.textContent = theme === 'dark' ? '☀' : '🌙';
   // redraw for correct grid/text colors
   renderAll();
   setPage('premissas');
@@ -1134,7 +1249,7 @@ function renderKPIs(model){
     {label:'Despesas fixas mensais', value:fmtBRL.format(model.totalFixas), hint:'Soma das despesas fixas editáveis.'},
     {label:'Capital de giro', value:fmtBRL.format(model.capitalGiro), hint:`${state.mesesCapitalGiro} mes(es) × despesas fixas.`},
     {label:'Capital total necessário', value:fmtBRL.format(model.capitalTotal), hint:'Implantação + capital de giro.'},
-    {label:'Ponto de equilíbrio mensal', value:fmtBRL.format(model.peBase), hint:'(Despesas fixas + custo mensal fixo) ÷ (1 − impostos).'},
+    {label:'Ponto de equilíbrio mensal', value:fmtBRL.format(model.peBase), hint:'(Despesas fixas mensais + custos variáveis/projetos mensais) ÷ (1 − impostos).'},
     {label:'PB estático (conservador)', value:paybackText(model.staticScenarios.moderado.paybackMonth), hint:'Payback pelo DRE estático.'},
     {label:'PB ramp-up (conservador)', value:paybackText(model.rampScenarios.moderado.paybackMonth), hint:'Payback usando a curva de ramp-up.'},
     {label:'Menor caixa (pessimista)', value:fmtBRL.format(model.staticScenarios.pessimista.minCash), hint:'Menor saldo em 60 meses.'},
@@ -1293,7 +1408,7 @@ function renderDetailedDRE(model){
   const scenario = document.getElementById('dreScenario').value;
   const data = model.staticScenarios[scenario].rows;
   document.getElementById('tblDRE').innerHTML = `
-    <thead><tr><th>Mês</th><th>Ano</th><th>Receita</th><th>Impostos</th><th>Custo mensal fixo</th><th>Despesas fixas</th><th>Despesas totais</th><th>Resultado mensal</th><th>Margem</th><th>Resultado acumulado</th><th>Caixa operacional</th><th>Ponto de equilíbrio</th><th>Folga / Falta</th><th>Saldo a recuperar</th></tr></thead>
+    <thead><tr><th>Mês</th><th>Ano</th><th>Receita</th><th>Impostos</th><th>Custos variáveis / projetos</th><th>Despesas fixas</th><th>Despesas totais</th><th>Resultado mensal</th><th>Margem</th><th>Resultado acumulado</th><th>Caixa operacional</th><th>Ponto de equilíbrio</th><th>Folga / Falta</th><th>Saldo a recuperar</th></tr></thead>
     <tbody>${
       data.map(row=>`<tr>
         <td class="mono">${row.mes}</td><td class="mono">${row.ano}</td><td class="mono">${fmtBRL.format(row.receita)}</td>
@@ -1329,6 +1444,8 @@ function renderRampupTable(model){
 
 function renderAll(){
   const model = computeModel(state);
+  const mobileCapital = document.getElementById('mobileCapitalTotal');
+  if(mobileCapital) mobileCapital.textContent = fmtBRL.format(model.capitalTotal);
   renderKPIs(model);
   renderScenarioCards(model);
   renderCharts(model);
@@ -1345,7 +1462,16 @@ function setup(){
   const savedTheme = localStorage.getItem('arquitetura_theme') || 'dark';
   setTheme(savedTheme);
 
-  document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>setPage(btn.dataset.page)));
+  document.querySelectorAll('.nav-btn,.mobile-nav-btn').forEach(btn=>btn.addEventListener('click',()=>setPage(btn.dataset.page)));
+
+  document.getElementById('mobileMenuBtn').addEventListener('click', openMobileDrawer);
+  document.getElementById('mobileDrawerBackdrop').addEventListener('click', (ev)=>{
+    if(ev.target.id === 'mobileDrawerBackdrop') closeMobileDrawer();
+  });
+  document.getElementById('mobileThemeBtn').addEventListener('click', ()=>{
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+  });
 
   document.getElementById('btnTheme').addEventListener('click', ()=> {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -1356,6 +1482,27 @@ function setup(){
     readInputs();
     savePremises(true);
     renderAll();
+  });
+
+  document.getElementById('mobileSavePremises').addEventListener('click', ()=>{
+    readInputs();
+    savePremises(false);
+    renderAll();
+    setMobileSaveNote('Salvo agora');
+  });
+  document.getElementById('mobileRecalc').addEventListener('click', ()=>{
+    readInputs();
+    savePremises(false);
+    renderAll();
+    setMobileSaveNote('Salvo e recalculado');
+    setPage('dashboard');
+  });
+  document.getElementById('mobileRestore').addEventListener('click', ()=>{
+    state = JSON.parse(JSON.stringify(defaultState));
+    fillInputs();
+    savePremises(false);
+    renderAll();
+    setMobileSaveNote('Padrão restaurado');
   });
 
   document.getElementById('addInvestmentInlineItem').addEventListener('click', ()=>{
@@ -1413,9 +1560,13 @@ function setup(){
   // Auto-salva qualquer alteração nas premissas ao sair do campo.
   document.getElementById('page-premissas').addEventListener('change', (ev)=>{
     if(ev.target.matches('input,select')){
+      if(ev.target.classList.contains('money-input')){
+        ev.target.value = formatMoneyInput(parseInput(ev.target.value));
+      }
       readInputs();
       savePremises(false);
       setSaveStatus('Alteração salva');
+      setMobileSaveNote('Alteração salva');
     }
   });
 
