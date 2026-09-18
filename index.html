@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viabilidade — Escritório de Arquitetura | V4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:8px; --radius-md:12px; --radius-lg:18px;
+  --sidebar-w:262px;
+}
+html[data-theme="dark"] {
+  --bg:#0A1513; --bg-1:#0E1B19; --bg-2:#132623; --bg-3:#183330;
+  --border:#1E3936; --border-soft:#16302C;
+  --text-1:#EAF3F0; --text-2:#9DB3AE; --text-3:#5E7873;
+  --teal:#33C9B8; --teal-dim:#1D6E64; --teal-glow:rgba(51,201,184,.16);
+  --gold:#EFB24A; --gold-dim:#8A6420; --gold-glow:rgba(239,178,74,.14);
+  --coral:#F0705A; --coral-dim:#7A3327; --coral-glow:rgba(240,112,90,.16);
+  --blue:#77A8FF; --blue-dim:#294F91; --blue-glow:rgba(119,168,255,.16);
+  --shadow:0 12px 34px rgba(0,0,0,.28);
+  --card-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+html[data-theme="light"] {
+  --bg:#F5FBFA; --bg-1:#FCFEFE; --bg-2:#FFFFFF; --bg-3:#EEF7F5;
+  --border:#D8E8E3; --border-soft:#E7F1EE;
+  --text-1:#153430; --text-2:#56726D; --text-3:#7B9590;
+  --teal:#129E8A; --teal-dim:#0E7E6F; --teal-glow:rgba(18,158,138,.14);
+  --gold:#D1952F; --gold-dim:#9E6E1C; --gold-glow:rgba(209,149,47,.14);
+  --coral:#DF5D45; --coral-dim:#AF412D; --coral-glow:rgba(223,93,69,.14);
+  --blue:#4C85F4; --blue-dim:#2F63C8; --blue-glow:rgba(76,133,244,.16);
+  --shadow:0 14px 34px rgba(17,58,49,.08);
+  --card-shadow:0 8px 20px rgba(17,58,49,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text-1);font-family:var(--font-body)}
+body{min-height:100vh;transition:background .2s ease,color .2s ease}
+.app{display:flex;min-height:100vh}
+#sidebar{
+  width:var(--sidebar-w); flex-shrink:0; position:fixed; inset:0 auto 0 0;
+  background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+  border-right:1px solid var(--border-soft); display:flex; flex-direction:column;
+}
+#sidebar .brand{padding:22px 20px 14px; border-bottom:1px solid var(--border-soft)}
+#sidebar .eyebrow{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--text-3); font-weight:700}
+#sidebar h1{font-family:var(--font-display); margin:8px 0 6px; font-size:22px; line-height:1.1}
+#sidebar p{margin:0; color:var(--text-2); font-size:13px; line-height:1.5}
+#sidebar nav{padding:18px 14px; display:flex; flex-direction:column; gap:10px}
+.nav-btn{
+  display:flex; align-items:center; gap:12px; width:100%; padding:14px 14px; border-radius:14px;
+  border:1px solid transparent; background:transparent; color:var(--text-2); cursor:pointer;
+  font:600 14px var(--font-body); text-align:left; transition:.18s ease;
+}
+.nav-btn .icon{width:34px;height:34px;border-radius:10px;background:var(--bg-3);display:grid;place-items:center;color:var(--teal)}
+.nav-btn.active{background:linear-gradient(180deg,var(--bg-3),color-mix(in srgb,var(--bg-3) 70%, transparent)); color:var(--text-1); border-color:var(--border)}
+#sidebar .foot{margin-top:auto; padding:16px 18px 20px; border-top:1px solid var(--border-soft)}
+.foot-card{padding:14px; border-radius:16px; background:var(--bg-3); border:1px solid var(--border); box-shadow:var(--card-shadow)}
+.foot-card b{display:block; font-family:var(--font-display); margin-bottom:6px}
+.foot-card span{display:block; color:var(--text-2); font-size:12px; line-height:1.5}
+
+#main{margin-left:var(--sidebar-w); flex:1; min-width:0; display:flex; flex-direction:column}
+#topbar{
+  position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb,var(--bg) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border-soft);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:16px 28px;
+}
+#topbar h2{font-family:var(--font-display); font-size:22px; margin:0}
+#topbar .sub{color:var(--text-2); font-size:13px; margin-top:4px}
+.top-actions{display:flex; gap:10px; flex-wrap:wrap}
+.btn{
+  border:1px solid var(--border); background:var(--bg-2); color:var(--text-1);
+  border-radius:12px; padding:11px 14px; cursor:pointer; font-weight:700;
+  transition:.18s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(180deg,color-mix(in srgb,var(--teal) 22%, var(--bg-2)), var(--bg-3)); border-color:var(--teal-dim)}
+.btn.ghost{background:transparent}
+.theme-toggle{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; background:var(--bg-2); border:1px solid var(--border); cursor:pointer; font-weight:700}
+
+.page{padding:24px 28px 32px; display:none}
+.page.active{display:block}
+.grid{display:grid; gap:16px}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kpi-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px}
+.scenario-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,.005)), var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--card-shadow);
+  padding:18px;
+  min-width:0;
+}
+.card.soft{background:linear-gradient(180deg,color-mix(in srgb,var(--teal) 8%, transparent),rgba(255,255,255,.01)), var(--bg-2)}
+.section-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap}
+.section-head h3{margin:0; font-family:var(--font-display); font-size:18px}
+.section-head p{margin:4px 0 0; color:var(--text-2); font-size:13px}
+.badge{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; background:var(--bg-3); color:var(--text-2); border:1px solid var(--border); font-size:12px; font-weight:700}
+.hero{
+  background:
+    radial-gradient(circle at top right, var(--teal-glow), transparent 32%),
+    radial-gradient(circle at left 30%, var(--gold-glow), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)),
+    var(--bg-2);
+}
+.hero h3{font-size:26px; margin:0 0 10px; font-family:var(--font-display)}
+.hero p{margin:0; color:var(--text-2); line-height:1.6}
+.hero-list{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
+.hero-list span{padding:8px 10px; border-radius:999px; background:var(--bg-3); border:1px solid var(--border); color:var(--text-2); font-size:12px; font-weight:600}
+
+.form-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.field{display:flex; flex-direction:column; gap:6px}
+.field label{font-size:12px; color:var(--text-2); font-weight:700; letter-spacing:.02em}
+.field input,.field select{
+  width:100%; border:1px solid var(--border); background:var(--bg-3); color:var(--text-1);
+  border-radius:12px; padding:12px 13px; outline:none; font:500 14px var(--font-body);
+}
+.field input:focus,.field select:focus{border-color:var(--teal-dim); box-shadow:0 0 0 3px var(--teal-glow)}
+/* Inputs numéricos sem setas de incremento/decremento */
+input[type="number"]{-moz-appearance:textfield;appearance:textfield;}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.save-status{
+  display:inline-flex;align-items:center;gap:7px;padding:9px 11px;border-radius:12px;
+  background:var(--teal-glow);border:1px solid var(--teal-dim);color:var(--teal);
+  font-size:12px;font-weight:800;white-space:nowrap;
+}
+.save-status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;}
+
+.expense-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px}
+
+.kpi{
+  position:relative; overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)), var(--bg-2);
+  border:1px solid var(--border); border-radius:16px; padding:16px;
+}
+.kpi::after{content:''; position:absolute; inset:auto -30px -30px auto; width:110px; height:110px; border-radius:999px; background:var(--teal-glow); filter:blur(8px)}
+.kpi .eyebrow{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-3); font-weight:800}
+.kpi .value{margin:8px 0 6px; font-family:var(--font-display); font-size:28px; line-height:1.06; letter-spacing:-.03em}
+.kpi .hint{font-size:12px; color:var(--text-2); line-height:1.45}
+
+.scenario-card{border-radius:18px; border:1px solid var(--border); padding:18px; background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)), var(--bg-2); box-shadow:var(--card-shadow)}
+.scenario-card.pess{box-shadow:inset 0 0 0 1px rgba(51,201,184,.18), var(--card-shadow)}
+.scenario-card.cons{box-shadow:inset 0 0 0 1px rgba(119,168,255,.18), var(--card-shadow)}
+.scenario-card.otim{box-shadow:inset 0 0 0 1px rgba(239,178,74,.18), var(--card-shadow)}
+.scenario-title{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px}
+.scenario-title h4{margin:0; font-family:var(--font-display); font-size:19px}
+.scenario-chip{padding:6px 10px; border-radius:999px; font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase}
+.scenario-chip.pess{background:rgba(51,201,184,.1); color:var(--teal); border:1px solid rgba(51,201,184,.24)}
+.scenario-chip.cons{background:rgba(119,168,255,.1); color:var(--blue); border:1px solid rgba(119,168,255,.24)}
+.scenario-chip.otim{background:rgba(239,178,74,.1); color:var(--gold); border:1px solid rgba(239,178,74,.24)}
+.scenario-metrics{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.metric-box{padding:12px; border-radius:14px; border:1px solid var(--border-soft); background:rgba(255,255,255,.02)}
+.metric-box .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); font-weight:800}
+.metric-box .val{margin-top:8px; font-family:var(--font-display); font-size:18px; line-height:1.1}
+.metric-box .sub{margin-top:5px; color:var(--text-2); font-size:11px; line-height:1.4}
+
+.chart-box{position:relative; height:340px; width:100%}
+.chart-box.xl{height:430px}
+.chart-box canvas{position:absolute; inset:0; width:100% !important; height:100% !important}
+.table-wrap{width:100%; overflow:auto; border-radius:14px; border:1px solid var(--border)}
+table{width:100%; border-collapse:collapse; min-width:980px; background:var(--bg-1)}
+table.compact{min-width:unset}
+th,td{padding:12px 14px; border-bottom:1px solid var(--border-soft); text-align:left; font-size:13px; vertical-align:middle}
+th{background:var(--bg-3); color:var(--text-1); position:sticky; top:0; z-index:1; white-space:nowrap}
+td{color:var(--text-2)}
+td strong{color:var(--text-1)}
+.positive{color:var(--teal)!important; font-weight:700}
+.negative{color:var(--coral)!important; font-weight:700}
+.warning{color:var(--gold)!important; font-weight:700}
+.mono{font-family:var(--font-mono)}
+.explain{margin-top:8px; font-size:12px; color:var(--text-2); line-height:1.55}
+.callout{display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:16px; border:1px solid var(--border); background:linear-gradient(180deg,rgba(119,168,255,.06),rgba(119,168,255,.03)), var(--bg-2)}
+.callout .dot{width:10px; height:10px; border-radius:999px; background:var(--blue); margin-top:6px; flex-shrink:0}
+.callout p{margin:0; color:var(--text-2); line-height:1.55; font-size:13px}
+
+
+/* Composição do investimento — card inline dentro de Premissas */
+.investment-inline-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.investment-inline-head,.investment-inline-row{
+  display:grid;grid-template-columns:74px minmax(220px,1fr) 180px 44px;gap:10px;align-items:center;
+}
+.investment-inline-head{
+  padding:0 10px 8px;color:var(--text-3);font-size:10.5px;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.investment-inline-rows{display:flex;flex-direction:column;gap:9px;}
+.investment-inline-row{
+  padding:10px;border:1px solid var(--border-soft);border-radius:13px;background:var(--bg-1);
+}
+.investment-inline-row input[type="text"]{
+  width:100%;border:1px solid var(--border);background:var(--bg-2);color:var(--text-1);
+  border-radius:9px;padding:10px 11px;outline:none;font:600 13px var(--font-body);
+}
+.investment-inline-row input[type="text"]:focus{border-color:var(--teal-dim);box-shadow:0 0 0 3px var(--teal-glow);}
+.investment-inline-row .investment-inline-value{font-family:var(--font-mono);text-align:right;}
+.investment-inline-check-wrap{display:flex;justify-content:center;}
+.investment-inline-check{width:18px;height:18px;accent-color:var(--teal);cursor:pointer;}
+.investment-inline-remove{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;
+  color:var(--coral);cursor:pointer;font-size:17px;font-weight:800;
+}
+.investment-inline-remove:hover{background:var(--coral-glow);border-color:var(--coral-dim);}
+.investment-inline-card .badge strong{color:var(--gold);margin-left:4px;}
+@media(max-width:680px){
+  .investment-inline-head{display:none;}
+  .investment-inline-row{grid-template-columns:40px 1fr 38px;}
+  .investment-inline-row .investment-inline-value{grid-column:2/3;}
+  .investment-inline-row .investment-inline-remove{grid-column:3/4;grid-row:1/3;}
+}
+
+/* Organização dos dois blocos principais de premissas */
+.premises-general .form-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:end;
+}
+.premises-general .field,
+.expenses-card .field{
+  padding:10px 11px;
+  border:1px solid var(--border-soft);
+  border-radius:12px;
+  background:color-mix(in srgb,var(--bg-3) 48%, transparent);
+}
+.premises-general .field label,
+.expenses-card .field label{
+  min-height:30px;
+  display:flex;
+  align-items:flex-end;
+  line-height:1.25;
+}
+.premises-general .field input,
+.expenses-card .field input{
+  font-family:var(--font-mono);
+  font-weight:700;
+  letter-spacing:.01em;
+  background:var(--bg-2);
+}
+.expenses-card .expense-grid{
+  grid-template-columns:repeat(3,minmax(240px,1fr));
+  gap:12px;
+}
+@media (max-width:1180px){
+  .premises-general .form-grid,
+  .expenses-card .expense-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:680px){
+  .premises-general .form-grid,
+  .expenses-card .expense-grid{grid-template-columns:1fr;}
+  .premises-general .field label,
+  .expenses-card .field label{min-height:auto;}
+}
+
+@media (max-width:1280px){ .scenario-grid{grid-template-columns:1fr} }
+@media (max-width:1180px){
+  .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form-grid,.expense-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:880px){
+  #sidebar{position:static; width:100%; height:auto; border-right:0; border-bottom:1px solid var(--border-soft)}
+  .app{display:block}
+  #main{margin-left:0}
+  #topbar{padding:14px 16px}
+  .page{padding:16px}
+}
+@media (max-width:680px){
+  .grid-2,.kpi-grid,.expense-grid,.form-grid,.scenario-metrics{grid-template-columns:1fr}
+  .chart-box{height:290px}
+  table{min-width:820px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="eyebrow">Estudo de viabilidade</div>
+      <h1>Arquitetura</h1>
+      <p>Premissas editáveis, tema claro/escuro, curvas completas e DRE detalhado.</p>
+    </div>
+    <nav>
+      <button class="nav-btn active" data-page="premissas"><span class="icon">⚙</span><span>Premissas</span></button>
+      <button class="nav-btn" data-page="dashboard"><span class="icon">▣</span><span>Dashboard</span></button>
+      <button class="nav-btn" data-page="curvas"><span class="icon">∿</span><span>Curvas & Ramp-up</span></button>
+    </nav>
+  </aside>
+
+  <main id="main">
+    <header id="topbar">
+      <div>
+        <h2 id="pageTitle">Premissas</h2>
+        <div class="sub" id="pageSub">Ajuste as premissas do estudo e recalcule o dashboard.</div>
+      </div>
+      <div class="top-actions">
+        <button class="theme-toggle" id="btnTheme">☀ Tema claro</button>
+        <span class="save-status premise-only" id="saveStatus">Premissas salvas</span>
+        <button class="btn premise-only" id="btnSalvar">Salvar premissas</button>
+        <button class="btn primary premise-only" id="btnRecalcular">Recalcular</button>
+        <button class="btn ghost premise-only" id="btnResetar">Restaurar padrão</button>
+      </div>
+    </header>
+
+    <section class="page active" id="page-premissas">
+      <div class="card hero">
+        <h3>Painel de premissas do estudo</h3>
+        <p>
+          Defina investimento inicial, capital de giro, faturamento-base, impostos, cenários, despesas fixas e o ramp-up.
+          O sistema recalcula automaticamente payback, caixa, ponto de equilíbrio, curvas e DRE detalhado.
+        </p>
+        <div class="hero-list">
+          <span>Tema claro e escuro</span>
+          <span>Curvas suavizadas</span>
+          <span>Cards por cenário</span>
+          <span>DRE detalhado</span>
+        </div>
+        <div class="explain" style="margin-top:14px;">
+          As premissas ficam gravadas automaticamente neste navegador. Os comandos de salvar, recalcular e restaurar aparecem somente nesta aba.
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:16px;">
+        <div class="card premises-general">
+          <div class="section-head">
+            <div><h3>Premissas gerais</h3><p>Base econômica do estudo.</p></div>
+            <span class="badge">Atualiza cenários, PE e payback</span>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label>Implantação (R$)</label><input id="implantacao" type="text" inputmode="decimal" autocomplete="off" readonly title="Calculado pela composição do investimento"></div>
+            <div class="field"><label>Meses de capital de giro</label><input id="mesesCapitalGiro" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Faturamento-base (R$)</label><input id="faturamentoBase" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Impostos (%)</label><input id="aliquotaImpostos" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Custo mensal fixo (R$)</label><input id="custoVariavelFixo" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Inflação anual despesas (%)</label><input id="inflacaoDespesasFixas" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Fator cenário pessimista (x)</label><input id="fatorPessimista" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Fator cenário conservador (x)</label><input id="fatorModerado" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Fator cenário otimista (x)</label><input id="fatorOtimista" type="text" inputmode="decimal" autocomplete="off"></div>
+          </div>
+        </div>
+
+        <div class="card soft">
+          <div class="section-head">
+            <div><h3>Ramp-up editável</h3><p>Percentual inicial e mês de atingimento por cenário.</p></div>
+            <span class="badge">Curva independente por cenário</span>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label>Pessimista — % inicial</label><input id="rpPct" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Pessimista — mês alvo</label><input id="rpMes" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Conservador — % inicial</label><input id="rmPct" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Conservador — mês alvo</label><input id="rmMes" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Otimista — % inicial</label><input id="roPct" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label>Otimista — mês alvo</label><input id="roMes" type="text" inputmode="decimal" autocomplete="off"></div>
+          </div>
+          <div class="explain">Os campos percentuais são exibidos já arredondados, por exemplo <strong>66,7%</strong>, para melhorar a leitura.</div>
+          <div class="callout" style="margin-top:14px;">
+            <span class="dot"></span>
+            <p>O custo mensal de <strong>R$ 2.000</strong> permanece fixo em todos os cenários, conforme a última definição do modelo.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="card investment-inline-card" style="margin-top:16px;">
+        <div class="section-head">
+          <div>
+            <h3>Composição do investimento</h3>
+            <p>Itens que formam o valor de implantação. Inclua, altere, desative ou exclua itens.</p>
+          </div>
+          <div class="investment-inline-actions">
+            <span class="badge">Total considerado: <strong id="investmentInlineTotal">R$ 58.900,00</strong></span>
+            <button class="btn premise-only" id="addInvestmentInlineItem" type="button">+ Incluir item</button>
+          </div>
+        </div>
+
+        <div class="investment-inline-head">
+          <span>Incluir</span>
+          <span>Item</span>
+          <span>Valor</span>
+          <span></span>
+        </div>
+
+        <div id="investmentInlineRows" class="investment-inline-rows"></div>
+
+        <div class="explain" style="margin-top:12px;">
+          O documento-base informa <strong>R$ 58.900,00</strong> como custo de implantação,
+          mas não apresenta a discriminação dos itens. Por isso, a composição inicia com um único valor consolidado;
+          você pode substituí-lo pelos itens reais. O total marcado como “Incluir” alimenta automaticamente o campo Implantação.
+        </div>
+      </div>
+
+      <div class="card expenses-card" style="margin-top:16px;">
+        <div class="section-head">
+          <div><h3>Despesas fixas mensais</h3><p>Esses valores alimentam capital de giro, caixa operacional, ponto de equilíbrio e DRE.</p></div>
+          <span class="badge">Detalhamento total</span>
+        </div>
+        <div id="expenseFields" class="expense-grid"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-dashboard">
+      <div class="kpi-grid" id="kpis"></div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="section-head">
+          <div><h3>Resumo executivo por cenário</h3><p>Um card para cada cenário com PB, caixa e principais indicadores.</p></div>
+        </div>
+        <div class="scenario-grid" id="scenarioCards"></div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="section-head"><div><h3>Receita mensal por cenário</h3><p>DRE estático com receitas fixas.</p></div></div>
+          <div class="chart-box"><canvas id="chartReceitas"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h3>Caixa operacional</h3><p>Capital de giro + resultado acumulado.</p></div></div>
+          <div class="chart-box"><canvas id="chartCaixa"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="section-head"><div><h3>Ponto de equilíbrio</h3><p>Comparativo entre receita do cenário e necessidade mensal.</p></div></div>
+          <div class="table-wrap"><table id="tblPE" class="compact"></table></div>
+          
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h3>Payback comparativo</h3><p>DRE estático versus ramp-up.</p></div></div>
+          <div class="table-wrap"><table id="tblPayback" class="compact"></table></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="section-head">
+          <div><h3>DRE detalhado</h3><p>Visualização mensal completa dos 60 meses.</p></div>
+          <div class="field" style="min-width:220px;">
+            <label>Selecionar cenário</label>
+            <select id="dreScenario">
+              <option value="pessimista">Pessimista</option>
+              <option value="moderado" selected>Conservador</option>
+              <option value="otimista">Otimista</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="tblDRE"></table></div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="section-head"><div><h3>Resumo anual — 5 anos</h3><p>Consolidação por cenário e por ano.</p></div></div>
+        <div class="table-wrap"><table id="tblResumo"></table></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-curvas">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="section-head"><div><h3>Curvas de resultado acumulado — DRE estático</h3><p>Comparação entre cenários com linha do investimento.</p></div></div>
+          <div class="chart-box xl"><canvas id="chartCurvasStatic"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h3>Ramp-up de faturamento completo</h3><p>Evolução gradual da receita dos três cenários ao longo dos 60 meses.</p></div></div>
+          <div class="chart-box xl"><canvas id="chartRamp"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h3>Resultado acumulado x investimento — Ramp-up</h3><p>Payback utilizando as curvas de maturação.</p></div></div>
+          <div class="chart-box xl"><canvas id="chartPaybackRamp"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h3>Ramp-up completo — tabela mensal</h3><p>Receita e resultado acumulado por mês.</p></div></div>
+          <div class="table-wrap"><table id="tblRampup"></table></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const defaultState = {"implantacao": 58900.0, "investmentItems": [{"nome":"Valor consolidado do investimento","valor":58900.0,"incluir":true}], "mesesCapitalGiro": 3, "faturamentoBase": 7000.0, "aliquotaImpostos": 0.06, "custoVariavelFixo": 2000.0, "fatorPessimista": 1.0, "fatorModerado": 1.5, "fatorOtimista": 2.0, "inflacaoDespesasFixas": 0.0, "despesasFixas": [{"nome": "Aluguel", "valor": 2300.0}, {"nome": "Energia elétrica", "valor": 500.0}, {"nome": "Água", "valor": 100.0}, {"nome": "Internet", "valor": 150.0}, {"nome": "Software arquitetura/renderização", "valor": 500.0}, {"nome": "Contabilidade", "valor": 400.0}, {"nome": "Material de expediente", "valor": 200.0}, {"nome": "Manutenção / limpeza", "valor": 250.0}, {"nome": "Lembranças para clientes", "valor": 200.0}, {"nome": "Encadernações / plotagens", "valor": 300.0}, {"nome": "Café / água para clientes", "valor": 150.0}, {"nome": "Marketing / publicidade", "valor": 500.0}, {"nome": "Pró-labore", "valor": 0.0}, {"nome": "Salários + encargos", "valor": 0.0}, {"nome": "Depreciação mensal", "valor": 0.0}], "rampup": {"pessimista": {"pctInicial": 0.8, "mesAlvo": 6}, "moderado": {"pctInicial": 0.6666666666666666, "mesAlvo": 18}, "otimista": {"pctInicial": 0.75, "mesAlvo": 36}}};
+const charts = {};
+let state = JSON.parse(JSON.stringify(defaultState));
+
+const STORAGE_KEY = 'arquitetura-viabilidade-premissas-v1';
+
+function normalizeSavedState(saved){
+  const base = JSON.parse(JSON.stringify(defaultState));
+  if(!saved || typeof saved !== 'object') return base;
+  const merged = {...base, ...saved};
+  if(Array.isArray(saved.investmentItems) && saved.investmentItems.length){
+    merged.investmentItems = saved.investmentItems.map((item,i)=>({
+      nome:String(item?.nome ?? `Item ${i+1}`),
+      valor:Number(item?.valor ?? 0),
+      incluir:item?.incluir !== false
+    }));
+  } else {
+    merged.investmentItems = [{
+      nome:'Valor consolidado do investimento',
+      valor:Number(saved.implantacao ?? base.implantacao ?? 0),
+      incluir:true
+    }];
+  }
+  merged.implantacao = merged.investmentItems
+    .filter(item=>item.incluir !== false)
+    .reduce((sum,item)=>sum+(Number(item.valor)||0),0);
+  merged.rampup = {
+    pessimista: {...base.rampup.pessimista, ...(saved.rampup?.pessimista||{})},
+    moderado: {...base.rampup.moderado, ...(saved.rampup?.moderado||{})},
+    otimista: {...base.rampup.otimista, ...(saved.rampup?.otimista||{})},
+  };
+  if(Array.isArray(saved.despesasFixas) && saved.despesasFixas.length){
+    merged.despesasFixas = saved.despesasFixas.map((item,i)=>({
+      nome: item?.nome ?? base.despesasFixas[i]?.nome ?? `Despesa ${i+1}`,
+      valor: Number(item?.valor ?? 0)
+    }));
+  }
+  return merged;
+}
+
+function loadPremises(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) state = normalizeSavedState(JSON.parse(saved));
+  }catch(e){
+    console.warn('Não foi possível carregar as premissas salvas.', e);
+  }
+}
+
+function setSaveStatus(msg='Premissas salvas'){
+  const el = document.getElementById('saveStatus');
+  if(!el) return;
+  el.textContent = msg;
+  clearTimeout(setSaveStatus._t);
+  setSaveStatus._t = setTimeout(()=>{ if(el) el.textContent='Premissas salvas'; },1800);
+}
+
+function savePremises(showMessage=true){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if(showMessage) setSaveStatus('Salvo agora');
+    return true;
+  }catch(e){
+    console.warn('Não foi possível salvar as premissas.', e);
+    setSaveStatus('Falha ao salvar');
+    return false;
+  }
+}
+
+
+const fmtBRL = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL', maximumFractionDigits:2});
+const fmtPct = (v) => (v*100).toLocaleString('pt-BR', {maximumFractionDigits:1})+'%';
+
+function parseInput(value){
+  let s = String(value ?? '').trim()
+    .replace(/\s/g,'')
+    .replace(/R\$/gi,'')
+    .replace(/%/g,'');
+  if(!s) return 0;
+  if(s.includes(',') && s.includes('.')){
+    s = s.replace(/\./g,'').replace(',','.');
+  } else if(s.includes(',')){
+    s = s.replace(',','.');
+  }
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+}
+function formatInput(value, maxDigits=2){
+  const n = Number(value || 0);
+  return n.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:maxDigits});
+}
+
+
+function scenarioTargets(s){
+  return {
+    pessimista: s.faturamentoBase * s.fatorPessimista,
+    moderado: s.faturamentoBase * s.fatorModerado,
+    otimista: s.faturamentoBase * s.fatorOtimista
+  };
+}
+function totalDespesasFixas(s){ return s.despesasFixas.reduce((acc,item)=>acc+(Number(item.valor)||0),0); }
+function smoothstep(t){ const x=Math.max(0,Math.min(1,t)); return x*x*(3-2*x); }
+
+function rampCurve(target,pctInicial,mesAlvo,months=60){
+  const start = target * pctInicial; const arr = [];
+  for(let m=1;m<=months;m++) {
+    if(m<=mesAlvo) {
+      const t = (mesAlvo<=1)?1:(m-1)/Math.max(1, mesAlvo-1);
+      arr.push(start + (target-start)*smoothstep(t));
+    } else arr.push(target);
+  }
+  return arr;
+}
+
+function calcStaticScenario(monthlyRevenue, s, months=60){
+  const fixasBase = totalDespesasFixas(s);
+  const capGiro = s.mesesCapitalGiro * fixasBase;
+  const capitalTotal = s.implantacao + capGiro;
+  let acumulado = 0, paybackMonth = null, minCash = null;
+  const rows = [];
+  for(let m=1;m<=months;m++) {
+    const ano = Math.ceil(m/12);
+    const despesasFixas = fixasBase * Math.pow(1 + s.inflacaoDespesasFixas, Math.floor((m-1)/12));
+    const impostos = monthlyRevenue * s.aliquotaImpostos;
+    const custoVariavel = s.custoVariavelFixo;
+    const despesasTotais = impostos + custoVariavel + despesasFixas;
+    const resultado = monthlyRevenue - despesasTotais;
+    acumulado += resultado;
+    const caixa = capGiro + acumulado;
+    const pontoEquilibrio = (1 - s.aliquotaImpostos) <= 0 ? 0 : (despesasFixas + custoVariavel) / (1 - s.aliquotaImpostos);
+    const folga = monthlyRevenue - pontoEquilibrio;
+    const margem = monthlyRevenue ? resultado / monthlyRevenue : 0;
+    const saldoRecuperar = capitalTotal - acumulado;
+    if(paybackMonth === null && acumulado >= capitalTotal) paybackMonth = m;
+    if(minCash === null || caixa < minCash) minCash = caixa;
+    rows.push({ mes:m, ano, receita:monthlyRevenue, impostos, custoVariavel, despesasFixas, despesasTotais, resultado, margem, acumulado, caixa, pontoEquilibrio, folga, saldoRecuperar });
+  }
+  return { rows, paybackMonth, minCash, finalAccum:acumulado, finalCash:rows[rows.length-1].caixa };
+}
+
+function calcRampScenario(revenues, s, months=60){
+  const fixasBase = totalDespesasFixas(s);
+  const capGiro = s.mesesCapitalGiro * fixasBase;
+  const capitalTotal = s.implantacao + capGiro;
+  let running = 0, paybackMonth = null;
+  const acc = [], rows = [];
+  for(let m=1;m<=months;m++) {
+    const rev = revenues[m-1];
+    const despesasFixas = fixasBase * Math.pow(1 + s.inflacaoDespesasFixas, Math.floor((m-1)/12));
+    const impostos = rev * s.aliquotaImpostos;
+    const resultado = rev - impostos - s.custoVariavelFixo - despesasFixas;
+    running += resultado;
+    if(paybackMonth === null && running >= capitalTotal) paybackMonth = m;
+    acc.push(running);
+    rows.push({mes:m, receita:rev, impostos, custoVariavel:s.custoVariavelFixo, despesasFixas, resultado, acumulado:running, saldoRecuperar:capitalTotal-running});
+  }
+  return { acumulado: acc, paybackMonth, finalAccum: running, rows };
+}
+
+function annualSummary(rows){
+  const out = [];
+  for(let ano=1; ano<=5; ano++) {
+    const slice = rows.slice((ano-1)*12, ano*12);
+    const receita = slice.reduce((a,b)=>a+b.receita,0);
+    const resultado = slice.reduce((a,b)=>a+b.resultado,0);
+    out.push({ ano, receita, resultado, margem: receita ? resultado/receita : 0, caixaFinal: slice[slice.length-1].caixa });
+  }
+  return out;
+}
+
+function computeModel(s){
+  const targets = scenarioTargets(s);
+  const totalFixas = totalDespesasFixas(s);
+  const capitalGiro = totalFixas * s.mesesCapitalGiro;
+  const capitalTotal = s.implantacao + capitalGiro;
+  const peBase = (1 - s.aliquotaImpostos) <= 0 ? 0 : (totalFixas + s.custoVariavelFixo) / (1 - s.aliquotaImpostos);
+  const staticScenarios = {
+    pessimista: calcStaticScenario(targets.pessimista, s),
+    moderado: calcStaticScenario(targets.moderado, s),
+    otimista: calcStaticScenario(targets.otimista, s),
+  };
+  const rampRevenues = {
+    pessimista: rampCurve(targets.pessimista, s.rampup.pessimista.pctInicial, s.rampup.pessimista.mesAlvo),
+    moderado: rampCurve(targets.moderado, s.rampup.moderado.pctInicial, s.rampup.moderado.mesAlvo),
+    otimista: rampCurve(targets.otimista, s.rampup.otimista.pctInicial, s.rampup.otimista.mesAlvo),
+  };
+  const rampScenarios = {
+    pessimista: calcRampScenario(rampRevenues.pessimista, s),
+    moderado: calcRampScenario(rampRevenues.moderado, s),
+    otimista: calcRampScenario(rampRevenues.otimista, s),
+  };
+  return {
+    targets, totalFixas, capitalGiro, capitalTotal, peBase, staticScenarios, rampRevenues, rampScenarios,
+    annual: {
+      pessimista: annualSummary(staticScenarios.pessimista.rows),
+      moderado: annualSummary(staticScenarios.moderado.rows),
+      otimista: annualSummary(staticScenarios.otimista.rows)
+    }
+  };
+}
+
+function paybackText(m){ return m==null ? 'N/A em 60 meses' : `${m} mês${m>1?'es':''}`; }
+function moneyClass(v){ return v>=0 ? 'positive' : 'negative'; }
+
+
+function investmentInlineTotal(){
+  return (state.investmentItems || [])
+    .filter(item=>item.incluir !== false)
+    .reduce((sum,item)=>sum+(Number(item.valor)||0),0);
+}
+
+function ensureInvestmentInlineItems(){
+  if(!Array.isArray(state.investmentItems) || !state.investmentItems.length){
+    state.investmentItems = [{
+      nome:'Valor consolidado do investimento',
+      valor:Number(state.implantacao||0),
+      incluir:true
+    }];
+  }
+}
+
+function renderInvestmentInlineRows(){
+  ensureInvestmentInlineItems();
+  const wrap = document.getElementById('investmentInlineRows');
+  wrap.innerHTML = state.investmentItems.map((item,idx)=>`
+    <div class="investment-inline-row" data-investment-inline-row="${idx}">
+      <div class="investment-inline-check-wrap">
+        <input class="investment-inline-check" type="checkbox" data-investment-inline-index="${idx}" ${item.incluir !== false ? 'checked' : ''}>
+      </div>
+      <input class="investment-inline-name" type="text" autocomplete="off"
+             data-investment-inline-index="${idx}" value="${String(item.nome ?? '').replace(/"/g,'&quot;')}">
+      <input class="investment-inline-value" type="text" inputmode="decimal" autocomplete="off"
+             data-investment-inline-index="${idx}" value="${formatInput(item.valor,2)}">
+      <button class="investment-inline-remove" type="button" data-investment-inline-remove="${idx}" aria-label="Excluir item">×</button>
+    </div>
+  `).join('');
+  refreshInvestmentInlineTotal();
+}
+
+function captureInvestmentInlineRows(){
+  const rows = [...document.querySelectorAll('.investment-inline-row')];
+  if(!rows.length) return;
+  state.investmentItems = rows.map((row,idx)=>({
+    nome:row.querySelector('.investment-inline-name')?.value.trim() || `Item ${idx+1}`,
+    valor:parseInput(row.querySelector('.investment-inline-value')?.value || 0),
+    incluir:!!row.querySelector('.investment-inline-check')?.checked
+  }));
+}
+
+function refreshInvestmentInlineTotal(){
+  captureInvestmentInlineRows();
+  state.implantacao = investmentInlineTotal();
+  const total = document.getElementById('investmentInlineTotal');
+  if(total) total.textContent = fmtBRL.format(state.implantacao);
+  const implantacao = document.getElementById('implantacao');
+  if(implantacao) implantacao.value = formatInput(state.implantacao,2);
+}
+
+function fillInputs(){
+  const m = {
+    implantacao: formatInput(state.implantacao,2),
+    mesesCapitalGiro: formatInput(state.mesesCapitalGiro,0),
+    faturamentoBase: formatInput(state.faturamentoBase,2),
+    aliquotaImpostos: formatInput(state.aliquotaImpostos*100,1),
+    custoVariavelFixo: formatInput(state.custoVariavelFixo,2),
+    inflacaoDespesasFixas: formatInput(state.inflacaoDespesasFixas*100,1),
+    fatorPessimista: formatInput(state.fatorPessimista,2),
+    fatorModerado: formatInput(state.fatorModerado,2),
+    fatorOtimista: formatInput(state.fatorOtimista,2),
+    rpPct: formatInput(state.rampup.pessimista.pctInicial*100,1),
+    rpMes: formatInput(state.rampup.pessimista.mesAlvo,0),
+    rmPct: formatInput(state.rampup.moderado.pctInicial*100,1),
+    rmMes: formatInput(state.rampup.moderado.mesAlvo,0),
+    roPct: formatInput(state.rampup.otimista.pctInicial*100,1),
+    roMes: formatInput(state.rampup.otimista.mesAlvo,0)
+  };
+  Object.entries(m).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=val; });
+  const wrap = document.getElementById('expenseFields');
+  wrap.innerHTML = '';
+  state.despesasFixas.forEach((item, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'field';
+    div.innerHTML = `<label>${item.nome}</label><input type="text" inputmode="decimal" autocomplete="off" data-expense-index="${idx}" value="${formatInput(item.valor, 2)}">`;
+    wrap.appendChild(div);
+  });
+  renderInvestmentInlineRows();
+}
+
+function readInputs(){
+  captureInvestmentInlineRows();
+  state.implantacao = investmentInlineTotal();
+  state.mesesCapitalGiro = parseInput(document.getElementById('mesesCapitalGiro').value);
+  state.faturamentoBase = parseInput(document.getElementById('faturamentoBase').value);
+  state.aliquotaImpostos = parseInput(document.getElementById('aliquotaImpostos').value)/100;
+  state.custoVariavelFixo = parseInput(document.getElementById('custoVariavelFixo').value);
+  state.inflacaoDespesasFixas = parseInput(document.getElementById('inflacaoDespesasFixas').value)/100;
+  state.fatorPessimista = parseInput(document.getElementById('fatorPessimista').value);
+  state.fatorModerado = parseInput(document.getElementById('fatorModerado').value);
+  state.fatorOtimista = parseInput(document.getElementById('fatorOtimista').value);
+  state.rampup.pessimista.pctInicial = parseInput(document.getElementById('rpPct').value)/100;
+  state.rampup.pessimista.mesAlvo = Math.max(1, Math.round(parseInput(document.getElementById('rpMes').value)||1));
+  state.rampup.moderado.pctInicial = parseInput(document.getElementById('rmPct').value)/100;
+  state.rampup.moderado.mesAlvo = Math.max(1, Math.round(parseInput(document.getElementById('rmMes').value)||1));
+  state.rampup.otimista.pctInicial = parseInput(document.getElementById('roPct').value)/100;
+  state.rampup.otimista.mesAlvo = Math.max(1, Math.round(parseInput(document.getElementById('roMes').value)||1));
+  document.querySelectorAll('[data-expense-index]').forEach(input=>{ state.despesasFixas[Number(input.dataset.expenseIndex)].valor = parseInput(input.value); });
+}
+
+function setPage(page){
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.page===page));
+  document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active', el.id===`page-${page}`));
+  const titleMap = {
+    premissas:['Premissas','Ajuste as premissas do estudo e recalcule o dashboard.'],
+    dashboard:['Dashboard','Visualize cards por cenário, KPIs, DRE detalhado e resumo anual.'],
+    curvas:['Curvas & Ramp-up','Analise curvas completas de resultado, receita e payback.']
+  };
+  document.getElementById('pageTitle').textContent = titleMap[page][0];
+  document.getElementById('pageSub').textContent = titleMap[page][1];
+  document.querySelectorAll('.premise-only').forEach(el=>{
+    el.style.display = page === 'premissas' ? '' : 'none';
+  });
+}
+
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('arquitetura_theme', theme);
+  document.getElementById('btnTheme').textContent = theme === 'dark' ? '☀ Tema claro' : '🌙 Tema escuro';
+  // redraw for correct grid/text colors
+  renderAll();
+  setPage('premissas');
+}
+
+function renderKPIs(model){
+  const items = [
+    {label:'Despesas fixas mensais', value:fmtBRL.format(model.totalFixas), hint:'Soma das despesas fixas editáveis.'},
+    {label:'Capital de giro', value:fmtBRL.format(model.capitalGiro), hint:`${state.mesesCapitalGiro} mes(es) × despesas fixas.`},
+    {label:'Capital total necessário', value:fmtBRL.format(model.capitalTotal), hint:'Implantação + capital de giro.'},
+    {label:'Ponto de equilíbrio mensal', value:fmtBRL.format(model.peBase), hint:'(Despesas fixas + custo mensal fixo) ÷ (1 − impostos).'},
+    {label:'PB estático (conservador)', value:paybackText(model.staticScenarios.moderado.paybackMonth), hint:'Payback pelo DRE estático.'},
+    {label:'PB ramp-up (conservador)', value:paybackText(model.rampScenarios.moderado.paybackMonth), hint:'Payback usando a curva de ramp-up.'},
+    {label:'Menor caixa (pessimista)', value:fmtBRL.format(model.staticScenarios.pessimista.minCash), hint:'Menor saldo em 60 meses.'},
+    {label:'Resultado acumulado 60M (otimista)', value:fmtBRL.format(model.staticScenarios.otimista.finalAccum), hint:'Resultado acumulado ao final do período.'},
+  ];
+  document.getElementById('kpis').innerHTML = items.map(item=>`
+    <div class="kpi">
+      <div class="eyebrow">${item.label}</div>
+      <div class="value">${item.value}</div>
+      <div class="hint">${item.hint}</div>
+    </div>
+  `).join('');
+}
+
+function renderScenarioCards(model){
+  const mapping = [
+    ['Pessimista','pessimista','pess','pess'],
+    ['Conservador','moderado','cons','cons'],
+    ['Otimista','otimista','otim','otim'],
+  ];
+  document.getElementById('scenarioCards').innerHTML = mapping.map(([label,key,cls,chip])=>{
+    const row = model.staticScenarios[key].rows[0];
+    const payStatic = paybackText(model.staticScenarios[key].paybackMonth);
+    const payRamp = paybackText(model.rampScenarios[key].paybackMonth);
+    const caixaFinal = model.staticScenarios[key].finalCash;
+    const folga = row.folga;
+    return `
+      <div class="scenario-card ${cls}">
+        <div class="scenario-title">
+          <h4>${label}</h4>
+          <span class="scenario-chip ${chip}">${label}</span>
+        </div>
+        <div class="scenario-metrics">
+          <div class="metric-box"><div class="lbl">Receita mensal</div><div class="val">${fmtBRL.format(row.receita)}</div><div class="sub">Receita do cenário no DRE estático.</div></div>
+          <div class="metric-box"><div class="lbl">PB / Payback estático</div><div class="val">${payStatic}</div><div class="sub">Recuperação do investimento no DRE.</div></div>
+          <div class="metric-box"><div class="lbl">PB / Payback ramp-up</div><div class="val">${payRamp}</div><div class="sub">Recuperação do investimento pela curva.</div></div>
+          <div class="metric-box"><div class="lbl">Caixa final 60M</div><div class="val ${moneyClass(caixaFinal)}">${fmtBRL.format(caixaFinal)}</div><div class="sub">Capital de giro + resultado acumulado.</div></div>
+          <div class="metric-box"><div class="lbl">Ponto de equilíbrio</div><div class="val">${fmtBRL.format(row.pontoEquilibrio)}</div><div class="sub">Receita mínima mensal para equilíbrio.</div></div>
+          <div class="metric-box"><div class="lbl">Folga / falta</div><div class="val ${moneyClass(folga)}">${fmtBRL.format(folga)}</div><div class="sub">Receita do cenário menos o PE.</div></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function axisColor(){ return getComputedStyle(document.documentElement).getPropertyValue('--text-2').trim(); }
+function gridColor(){ return document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(255,255,255,.05)' : 'rgba(21,52,48,.08)'; }
+function labelColor(){ return getComputedStyle(document.documentElement).getPropertyValue('--text-1').trim(); }
+
+function baseChartOptions(){
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    interaction:{mode:'index', intersect:false},
+    elements:{
+      line:{tension:.42, cubicInterpolationMode:'monotone', borderWidth:3},
+      point:{radius:0, hoverRadius:5, hitRadius:12}
+    },
+    plugins:{
+      legend:{labels:{color:labelColor(), usePointStyle:true, pointStyle:'line'}},
+      tooltip:{
+        backgroundColor:getComputedStyle(document.documentElement).getPropertyValue('--bg-2').trim(),
+        borderColor:getComputedStyle(document.documentElement).getPropertyValue('--border').trim(),
+        borderWidth:1,
+        titleColor:labelColor(),
+        bodyColor:labelColor(),
+        displayColors:true
+      }
+    },
+    scales:{
+      x:{ticks:{color:axisColor()}, grid:{color:gridColor()}},
+      y:{ticks:{color:axisColor(), callback:(v)=>'R$ '+Number(v).toLocaleString('pt-BR')}, grid:{color:gridColor()}}
+    }
+  };
+}
+
+function drawChart(id, config){
+  if(charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id).getContext('2d'), config);
+}
+
+function renderCharts(model){
+  const labels60 = Array.from({length:60}, (_,i)=>i+1);
+  drawChart('chartReceitas', {
+    type:'bar',
+    data:{ labels:['Pessimista','Conservador','Otimista'],
+      datasets:[{ label:'Receita mensal', data:[model.targets.pessimista, model.targets.moderado, model.targets.otimista],
+      backgroundColor:['rgba(51,201,184,.78)','rgba(119,168,255,.82)','rgba(239,178,74,.82)'],
+      borderColor:['#33C9B8','#77A8FF','#EFB24A'], borderWidth:1.2, borderRadius:12 }]},
+    options: baseChartOptions()
+  });
+  drawChart('chartCaixa', {
+    type:'line',
+    data:{ labels:labels60, datasets:[
+      {label:'Pessimista', data:model.staticScenarios.pessimista.rows.map(r=>r.caixa), borderColor:'#33C9B8'},
+      {label:'Conservador', data:model.staticScenarios.moderado.rows.map(r=>r.caixa), borderColor:'#77A8FF'},
+      {label:'Otimista', data:model.staticScenarios.otimista.rows.map(r=>r.caixa), borderColor:'#EFB24A'}
+    ]},
+    options: baseChartOptions()
+  });
+  drawChart('chartCurvasStatic', {
+    type:'line',
+    data:{ labels:labels60, datasets:[
+      {label:'Pessimista', data:model.staticScenarios.pessimista.rows.map(r=>r.acumulado), borderColor:'#33C9B8'},
+      {label:'Conservador', data:model.staticScenarios.moderado.rows.map(r=>r.acumulado), borderColor:'#77A8FF'},
+      {label:'Otimista', data:model.staticScenarios.otimista.rows.map(r=>r.acumulado), borderColor:'#EFB24A'},
+      {label:'Investimento', data:labels60.map(()=>model.capitalTotal), borderColor:'#F0705A', tension:0, borderWidth:2.5}
+    ]},
+    options: baseChartOptions()
+  });
+  drawChart('chartRamp', {
+    type:'line',
+    data:{ labels:labels60, datasets:[
+      {label:'Pessimista', data:model.rampRevenues.pessimista, borderColor:'#33C9B8'},
+      {label:'Conservador', data:model.rampRevenues.moderado, borderColor:'#77A8FF'},
+      {label:'Otimista', data:model.rampRevenues.otimista, borderColor:'#EFB24A'}
+    ]},
+    options: baseChartOptions()
+  });
+  drawChart('chartPaybackRamp', {
+    type:'line',
+    data:{ labels:labels60, datasets:[
+      {label:'Pessimista', data:model.rampScenarios.pessimista.acumulado, borderColor:'#33C9B8'},
+      {label:'Conservador', data:model.rampScenarios.moderado.acumulado, borderColor:'#77A8FF'},
+      {label:'Otimista', data:model.rampScenarios.otimista.acumulado, borderColor:'#EFB24A'},
+      {label:'Investimento', data:labels60.map(()=>model.capitalTotal), borderColor:'#F0705A', tension:0, borderWidth:2.5}
+    ]},
+    options: baseChartOptions()
+  });
+}
+
+function renderPETable(model){
+  const rows = [['Pessimista', model.targets.pessimista],['Conservador', model.targets.moderado],['Otimista', model.targets.otimista]];
+  document.getElementById('tblPE').innerHTML = `
+    <thead><tr><th>Cenário</th><th>Receita mensal</th><th>Ponto de equilíbrio</th><th>Folga / Falta</th></tr></thead>
+    <tbody>${
+      rows.map(([nome, receita])=>{
+        const gap = receita - model.peBase;
+        return `<tr><td><strong>${nome}</strong></td><td class="mono">${fmtBRL.format(receita)}</td><td class="mono">${fmtBRL.format(model.peBase)}</td><td class="${gap>=0?'positive':'negative'} mono">${fmtBRL.format(gap)}</td></tr>`;
+      }).join('')
+    }</tbody>
+  `;
+}
+
+function renderPaybackTable(model){
+  const keys = [['pessimista','Pessimista'],['moderado','Conservador'],['otimista','Otimista']];
+  document.getElementById('tblPayback').innerHTML = `
+    <thead><tr><th>Cenário</th><th>Payback estático</th><th>Payback ramp-up</th><th>Resultado 60M estático</th><th>Resultado 60M ramp-up</th></tr></thead>
+    <tbody>${
+      keys.map(([k,label])=>`<tr><td><strong>${label}</strong></td><td>${paybackText(model.staticScenarios[k].paybackMonth)}</td><td>${paybackText(model.rampScenarios[k].paybackMonth)}</td><td class="${model.staticScenarios[k].finalAccum>=0?'positive':'negative'} mono">${fmtBRL.format(model.staticScenarios[k].finalAccum)}</td><td class="${model.rampScenarios[k].finalAccum>=0?'positive':'negative'} mono">${fmtBRL.format(model.rampScenarios[k].finalAccum)}</td></tr>`).join('')
+    }</tbody>
+  `;
+}
+
+function renderDetailedDRE(model){
+  const scenario = document.getElementById('dreScenario').value;
+  const data = model.staticScenarios[scenario].rows;
+  document.getElementById('tblDRE').innerHTML = `
+    <thead><tr><th>Mês</th><th>Ano</th><th>Receita</th><th>Impostos</th><th>Custo mensal fixo</th><th>Despesas fixas</th><th>Despesas totais</th><th>Resultado mensal</th><th>Margem</th><th>Resultado acumulado</th><th>Caixa operacional</th><th>Ponto de equilíbrio</th><th>Folga / Falta</th><th>Saldo a recuperar</th></tr></thead>
+    <tbody>${
+      data.map(row=>`<tr>
+        <td class="mono">${row.mes}</td><td class="mono">${row.ano}</td><td class="mono">${fmtBRL.format(row.receita)}</td>
+        <td class="mono">${fmtBRL.format(row.impostos)}</td><td class="mono">${fmtBRL.format(row.custoVariavel)}</td>
+        <td class="mono">${fmtBRL.format(row.despesasFixas)}</td><td class="mono">${fmtBRL.format(row.despesasTotais)}</td>
+        <td class="${row.resultado>=0?'positive':'negative'} mono">${fmtBRL.format(row.resultado)}</td><td class="${row.margem>=0?'positive':'negative'}">${fmtPct(row.margem)}</td>
+        <td class="${row.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(row.acumulado)}</td><td class="${row.caixa>=0?'positive':'negative'} mono">${fmtBRL.format(row.caixa)}</td>
+        <td class="mono">${fmtBRL.format(row.pontoEquilibrio)}</td><td class="${row.folga>=0?'positive':'negative'} mono">${fmtBRL.format(row.folga)}</td>
+        <td class="${row.saldoRecuperar<=0?'positive':'warning'} mono">${fmtBRL.format(row.saldoRecuperar)}</td>
+      </tr>`).join('')
+    }</tbody>
+  `;
+}
+
+function renderResumo(model){
+  const keys = [['pessimista','Pessimista'],['moderado','Conservador'],['otimista','Otimista']];
+  let body = '';
+  keys.forEach(([k,label])=> model.annual[k].forEach(row => {
+    body += `<tr><td><strong>${label}</strong></td><td class="mono">${row.ano}</td><td class="mono">${fmtBRL.format(row.receita)}</td><td class="${row.resultado>=0?'positive':'negative'} mono">${fmtBRL.format(row.resultado)}</td><td class="${row.margem>=0?'positive':'negative'}">${fmtPct(row.margem)}</td><td class="${row.caixaFinal>=0?'positive':'negative'} mono">${fmtBRL.format(row.caixaFinal)}</td></tr>`;
+  }));
+  document.getElementById('tblResumo').innerHTML = `<thead><tr><th>Cenário</th><th>Ano</th><th>Receita anual</th><th>Resultado anual</th><th>Margem</th><th>Caixa operacional final</th></tr></thead><tbody>${body}</tbody>`;
+}
+
+function renderRampupTable(model){
+  const rows = Array.from({length:60}, (_,i)=>i+1).map(m=>{
+    const rp = model.rampScenarios.pessimista.rows[m-1];
+    const rc = model.rampScenarios.moderado.rows[m-1];
+    const ro = model.rampScenarios.otimista.rows[m-1];
+    return `<tr><td class="mono">${m}</td><td class="mono">${fmtBRL.format(rp.receita)}</td><td class="mono">${fmtBRL.format(rc.receita)}</td><td class="mono">${fmtBRL.format(ro.receita)}</td><td class="${rp.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(rp.acumulado)}</td><td class="${rc.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(rc.acumulado)}</td><td class="${ro.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(ro.acumulado)}</td></tr>`;
+  }).join('');
+  document.getElementById('tblRampup').innerHTML = `<thead><tr><th>Mês</th><th>Receita ramp-up Pess.</th><th>Receita ramp-up Conserv.</th><th>Receita ramp-up Otim.</th><th>Resultado acum. Pess.</th><th>Resultado acum. Conserv.</th><th>Resultado acum. Otim.</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function renderAll(){
+  const model = computeModel(state);
+  renderKPIs(model);
+  renderScenarioCards(model);
+  renderCharts(model);
+  renderPETable(model);
+  renderPaybackTable(model);
+  renderDetailedDRE(model);
+  renderResumo(model);
+  renderRampupTable(model);
+}
+
+function setup(){
+  loadPremises();
+  fillInputs();
+  const savedTheme = localStorage.getItem('arquitetura_theme') || 'dark';
+  setTheme(savedTheme);
+
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>setPage(btn.dataset.page)));
+
+  document.getElementById('btnTheme').addEventListener('click', ()=> {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+  });
+
+  document.getElementById('btnSalvar').addEventListener('click', ()=>{
+    readInputs();
+    savePremises(true);
+    renderAll();
+  });
+
+  document.getElementById('addInvestmentInlineItem').addEventListener('click', ()=>{
+    captureInvestmentInlineRows();
+    state.investmentItems.push({nome:'Novo item',valor:0,incluir:true});
+    renderInvestmentInlineRows();
+    savePremises(false);
+    setSaveStatus('Item incluído');
+  });
+
+  document.getElementById('investmentInlineRows').addEventListener('input', ()=>{
+    refreshInvestmentInlineTotal();
+  });
+
+  document.getElementById('investmentInlineRows').addEventListener('change', ()=>{
+    refreshInvestmentInlineTotal();
+    savePremises(false);
+    renderAll();
+    setSaveStatus('Investimento atualizado');
+  });
+
+  document.getElementById('investmentInlineRows').addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('[data-investment-inline-remove]');
+    if(!btn) return;
+    captureInvestmentInlineRows();
+    const idx = Number(btn.dataset.investmentInlineRemove);
+    state.investmentItems.splice(idx,1);
+    if(!state.investmentItems.length){
+      state.investmentItems.push({nome:'Novo item',valor:0,incluir:true});
+    }
+    renderInvestmentInlineRows();
+    refreshInvestmentInlineTotal();
+    savePremises(false);
+    renderAll();
+    setSaveStatus('Item excluído');
+  });
+
+
+  document.getElementById('btnRecalcular').addEventListener('click', ()=>{
+    readInputs();
+    savePremises(false);
+    renderAll();
+    setSaveStatus('Salvo e recalculado');
+    setPage('dashboard');
+  });
+
+  document.getElementById('btnResetar').addEventListener('click', ()=>{
+    state = JSON.parse(JSON.stringify(defaultState));
+    fillInputs();
+    savePremises(false);
+    renderAll();
+    setSaveStatus('Padrão restaurado');
+  });
+
+  // Auto-salva qualquer alteração nas premissas ao sair do campo.
+  document.getElementById('page-premissas').addEventListener('change', (ev)=>{
+    if(ev.target.matches('input,select')){
+      readInputs();
+      savePremises(false);
+      setSaveStatus('Alteração salva');
+    }
+  });
+
+  document.getElementById('dreScenario').addEventListener('change', ()=>renderDetailedDRE(computeModel(state)));
+  renderAll();
+}
+setup();
+</script>
+</body>
+</html>
