@@ -579,6 +579,39 @@ td strong{color:var(--text-1)}
   color:var(--text-1);
 }
 
+
+/* Ajuste específico: tabela de ramp-up cabe no desktop sem barra horizontal */
+.table-wrap.rampup-fit{overflow-x:hidden;}
+#tblRampup{
+  width:100%;
+  min-width:unset !important;
+  table-layout:fixed;
+}
+#tblRampup th,
+#tblRampup td{
+  padding:8px 6px;
+  font-size:11px;
+}
+#tblRampup th{
+  white-space:normal;
+  line-height:1.18;
+}
+#tblRampup td{
+  word-break:break-word;
+}
+#tblRampup th:first-child,
+#tblRampup td:first-child{
+  width:44px;
+  text-align:center;
+}
+#tblRampup .mono{
+  font-size:11px;
+}
+@media (max-width:1200px){
+  .table-wrap.rampup-fit{overflow-x:auto;}
+  #tblRampup{min-width:860px !important;}
+}
+
 </style>
 </head>
 <body>
@@ -819,7 +852,7 @@ td strong{color:var(--text-1)}
         </div>
         <div class="card">
           <div class="section-head"><div><h3>Ramp-up completo — tabela mensal</h3><p>Receita e resultado acumulado por mês.</p></div></div>
-          <div class="table-wrap"><table id="tblRampup"></table></div>
+          <div class="table-wrap rampup-fit"><table id="tblRampup"></table></div>
         </div>
       </div>
     </section>
@@ -1439,7 +1472,7 @@ function renderRampupTable(model){
     const ro = model.rampScenarios.otimista.rows[m-1];
     return `<tr><td class="mono">${m}</td><td class="mono">${fmtBRL.format(rp.receita)}</td><td class="mono">${fmtBRL.format(rc.receita)}</td><td class="mono">${fmtBRL.format(ro.receita)}</td><td class="${rp.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(rp.acumulado)}</td><td class="${rc.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(rc.acumulado)}</td><td class="${ro.acumulado>=0?'positive':'negative'} mono">${fmtBRL.format(ro.acumulado)}</td></tr>`;
   }).join('');
-  document.getElementById('tblRampup').innerHTML = `<thead><tr><th>Mês</th><th>Receita ramp-up Pess.</th><th>Receita ramp-up Conserv.</th><th>Receita ramp-up Otim.</th><th>Resultado acum. Pess.</th><th>Resultado acum. Conserv.</th><th>Resultado acum. Otim.</th></tr></thead><tbody>${rows}</tbody>`;
+  document.getElementById('tblRampup').innerHTML = `<thead><tr><th>Mês</th><th>Receita<br>Pess.</th><th>Receita<br>Conserv.</th><th>Receita<br>Otim.</th><th>Acumulado<br>Pess.</th><th>Acumulado<br>Conserv.</th><th>Acumulado<br>Otim.</th></tr></thead><tbody>${rows}</tbody>`;
 }
 
 function renderAll(){
