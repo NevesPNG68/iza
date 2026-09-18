@@ -275,6 +275,322 @@ td strong{color:var(--text-1)}
   .chart-box{height:290px}
   table{min-width:820px}
 }
+
+/* =========================================================
+   MOBILE REWORK — preserva o desktop e reorganiza <= 880px
+   ========================================================= */
+@media (max-width:880px){
+  body{overflow-x:hidden;}
+
+  /* O antigo sidebar vira um cabeçalho compacto */
+  #sidebar{
+    position:static;
+    width:100%;
+    height:auto;
+    border-right:0;
+    border-bottom:1px solid var(--border-soft);
+    background:var(--bg-1);
+  }
+  #sidebar .brand{
+    padding:14px 16px 10px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2px;
+  }
+  #sidebar .brand .eyebrow{
+    font-size:9px;
+    letter-spacing:.16em;
+  }
+  #sidebar .brand h1{
+    margin:3px 0 0;
+    font-size:21px;
+  }
+  #sidebar .brand p{
+    display:none;
+  }
+  #sidebar nav{
+    padding:8px 10px 10px;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:7px;
+  }
+  .nav-btn{
+    justify-content:center;
+    padding:10px 8px;
+    gap:6px;
+    min-height:46px;
+    border-radius:11px;
+    font-size:12px;
+    white-space:nowrap;
+  }
+  .nav-btn .icon{
+    width:27px;
+    height:27px;
+    border-radius:8px;
+    font-size:12px;
+  }
+  #sidebar .foot{display:none;}
+
+  #main{margin-left:0;width:100%;}
+
+  /* Remove a repetição enorme de "Premissas" no mobile */
+  #topbar{
+    position:sticky;
+    top:0;
+    z-index:30;
+    padding:9px 10px;
+    gap:8px;
+    background:color-mix(in srgb,var(--bg) 94%, transparent);
+  }
+  #topbar > div:first-child{
+    display:none;
+  }
+  .top-actions{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+  }
+  .top-actions .btn,
+  .top-actions .theme-toggle{
+    width:100%;
+    justify-content:center;
+    min-height:42px;
+    padding:9px 8px;
+    border-radius:10px;
+    font-size:12px;
+  }
+  .top-actions .save-status{
+    display:none !important;
+  }
+
+  .page{
+    padding:12px 10px 24px;
+  }
+
+  .card{
+    border-radius:14px;
+    padding:14px;
+    box-shadow:0 8px 20px rgba(0,0,0,.14);
+  }
+  .section-head{
+    margin-bottom:11px;
+    gap:8px;
+  }
+  .section-head h3{
+    font-size:17px;
+  }
+  .section-head p{
+    font-size:11.5px;
+    line-height:1.35;
+  }
+  .badge{
+    padding:6px 8px;
+    font-size:10px;
+  }
+
+  .hero{
+    padding:15px;
+  }
+  .hero h3{
+    font-size:21px;
+    line-height:1.15;
+    margin-bottom:7px;
+  }
+  .hero p{
+    font-size:12.5px;
+    line-height:1.45;
+  }
+  .hero-list{
+    margin-top:11px;
+    gap:6px;
+  }
+  .hero-list span{
+    padding:6px 8px;
+    font-size:10px;
+  }
+
+  /* Campos mais densos no celular */
+  .form-grid,
+  .premises-general .form-grid,
+  .expense-grid,
+  .expenses-card .expense-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px;
+  }
+  .premises-general .field,
+  .expenses-card .field{
+    padding:8px;
+    border-radius:10px;
+  }
+  .field{
+    gap:4px;
+  }
+  .field label,
+  .premises-general .field label,
+  .expenses-card .field label{
+    min-height:0;
+    font-size:10.5px;
+    line-height:1.2;
+  }
+  .field input,
+  .field select,
+  .premises-general .field input,
+  .expenses-card .field input{
+    min-height:42px;
+    padding:9px 10px;
+    border-radius:9px;
+    font-size:16px; /* evita zoom automático no iPhone */
+  }
+
+  /* Cards de cenários e KPIs */
+  .kpi-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  .kpi{
+    padding:12px;
+    border-radius:12px;
+  }
+  .kpi .eyebrow{
+    font-size:9px;
+    letter-spacing:.07em;
+  }
+  .kpi .value{
+    font-size:19px;
+    margin:6px 0 4px;
+  }
+  .kpi .hint{
+    font-size:10px;
+  }
+  .scenario-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  .scenario-card{
+    padding:13px;
+    border-radius:14px;
+  }
+  .scenario-metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  .metric-box{
+    padding:10px;
+    border-radius:11px;
+  }
+  .metric-box .val{
+    font-size:16px;
+  }
+
+  /* Gráficos */
+  .chart-box,
+  .chart-box.xl{
+    height:285px;
+  }
+
+  /* Tabelas continuam roláveis horizontalmente */
+  .table-wrap{
+    -webkit-overflow-scrolling:touch;
+  }
+  table{
+    min-width:760px;
+  }
+
+  /* Investimento inline: confortável no celular */
+  .investment-inline-actions{
+    width:100%;
+    justify-content:space-between;
+  }
+  .investment-inline-head{
+    display:none;
+  }
+  .investment-inline-row{
+    grid-template-columns:34px minmax(0,1fr) 34px;
+    gap:7px;
+    padding:8px;
+  }
+  .investment-inline-row .investment-inline-name{
+    grid-column:2/3;
+  }
+  .investment-inline-row .investment-inline-value{
+    grid-column:2/3;
+    grid-row:2;
+    text-align:left;
+    font-size:16px;
+  }
+  .investment-inline-row .investment-inline-remove{
+    grid-column:3/4;
+    grid-row:1/3;
+    align-self:center;
+  }
+
+  .investment-inline-card .section-head{
+    display:block;
+  }
+  .investment-inline-actions{
+    margin-top:10px;
+  }
+}
+
+/* iPhones menores: mantém densidade sem esmagar o conteúdo */
+@media (max-width:430px){
+  #sidebar nav{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .nav-btn{
+    font-size:11px;
+    padding:9px 4px;
+  }
+  .nav-btn .icon{
+    display:none;
+  }
+
+  .top-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .form-grid,
+  .premises-general .form-grid,
+  .expense-grid,
+  .expenses-card .expense-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .page{
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  .card{
+    padding:12px;
+  }
+
+  .scenario-metrics{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .chart-box,
+  .chart-box.xl{
+    height:260px;
+  }
+}
+
+/* Muito estreito: só então vira uma coluna */
+@media (max-width:350px){
+  .form-grid,
+  .premises-general .form-grid,
+  .expense-grid,
+  .expenses-card .expense-grid,
+  .kpi-grid,
+  .scenario-metrics{
+    grid-template-columns:1fr !important;
+  }
+  #sidebar nav{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 <body>
